@@ -1,9 +1,6 @@
 package subcommands
 
 import (
-	"fmt"
-	"os"
-
 	"github.com/chemi123/ldocker/pkg/client"
 	"github.com/chemi123/ldocker/pkg/factory"
 	"github.com/spf13/cobra"
@@ -16,17 +13,17 @@ type imagesSubcommandHandler struct {
 	client  client.Client
 }
 
-func (isc *imagesSubcommandHandler) completeOptions() error {
+func (ish *imagesSubcommandHandler) completeOptions() error {
 	return nil
 }
 
-func (isc *imagesSubcommandHandler) completeHandler(clientFactory factory.ClientFactory) error {
-	err := isc.completeOptions()
+func (ish *imagesSubcommandHandler) completeHandler(clientFactory factory.ClientFactory) error {
+	err := ish.completeOptions()
 	if err != nil {
 		return err
 	}
 
-	isc.client, err = clientFactory.NewClient()
+	ish.client, err = clientFactory.NewClient()
 	if err != nil {
 		return err
 	}
@@ -34,8 +31,8 @@ func (isc *imagesSubcommandHandler) completeHandler(clientFactory factory.Client
 	return nil
 }
 
-func (isc *imagesSubcommandHandler) run() error {
-	return isc.client.ListContainerImages()
+func (ish *imagesSubcommandHandler) run() error {
+	return ish.client.ListContainerImages()
 }
 
 func NewImagesSubCommand(clientFactory factory.ClientFactory) *cobra.Command {
@@ -45,16 +42,16 @@ func NewImagesSubCommand(clientFactory factory.ClientFactory) *cobra.Command {
 		Use:   "images",
 		Short: shortImagesDesc,
 		Long:  longImagesDesc,
-		Run: func(cmd *cobra.Command, args []string) {
+		RunE: func(cmd *cobra.Command, args []string) error {
 			if err := isc.completeHandler(clientFactory); err != nil {
-				fmt.Fprintf(os.Stderr, "%v\n", err)
-				os.Exit(1)
+				return err
 			}
 
 			if err := isc.run(); err != nil {
-				fmt.Fprintf(os.Stderr, "%v\n", err)
-				os.Exit(1)
+				return err
 			}
+
+			return nil
 		},
 	}
 }
