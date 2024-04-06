@@ -5,6 +5,7 @@ package cmd
 
 import (
 	"github.com/chemi123/ldocker/cmd/subcommands"
+	"github.com/chemi123/ldocker/pkg/factory"
 	"github.com/spf13/cobra"
 )
 
@@ -29,8 +30,11 @@ func NewRootCommand() *cobra.Command {
 		Long:  longRootDesc,
 	}
 
+	// 仮に他のClientFactoryを注入するならここになる。
+	clientFactory := factory.NewDockerdClientFactory()
+
 	rootCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
-	rootCmd.AddCommand(subcommands.NewImagesSubCommand())
+	rootCmd.AddCommand(subcommands.NewImagesSubCommand(clientFactory))
 
 	return rootCmd
 }
