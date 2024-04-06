@@ -27,7 +27,7 @@ func (dc *DockerdClient) ListContainerImages() error {
 	return nil
 }
 
-func NewDockerdClient() (*DockerdClient, error) {
+func NewDockerdClient() (Client, error) {
 	dc, err := dclient.NewClientWithOpts(dclient.FromEnv, dclient.WithAPIVersionNegotiation())
 	if err != nil {
 		return nil, err
