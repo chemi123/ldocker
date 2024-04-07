@@ -1,5 +1,6 @@
 package subcommands
 
+// For images subcommand
 const (
 	shortImagesDesc = "Manages Docker images, including listing and removing images."
 
@@ -14,6 +15,8 @@ This command is a fundamental tool for Docker users, providing the insights need
 	imageColumns = "REPOSITORY\tTAG\tIMAGE ID\tCREATED\tSIZE"
 
 	imageOutputFormat = "%s\t%s\t%s\t%s\t%s\n"
+
+	imageOutputQuietFormat = "%s\n"
 
 	imageIDLength = 12
 )
