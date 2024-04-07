@@ -3,9 +3,14 @@ package subcommands
 import (
 	"context"
 	"fmt"
+	"os"
+	"strings"
+	"text/tabwriter"
+	"time"
 
 	"github.com/chemi123/ldocker/pkg/client"
 	"github.com/chemi123/ldocker/pkg/factory"
+	"github.com/dustin/go-humanize"
 	"github.com/spf13/cobra"
 )
 
@@ -61,8 +66,18 @@ func (ish *imagesSubcommandHandler) run(ctx context.Context) error {
 		return err
 	}
 
+	writer := tabwriter.NewWriter(os.Stdout, 0, 0, 2, ' ', tabwriter.TabIndent)
+	defer writer.Flush()
+
+	fmt.Fprintln(writer, imageColumns)
+
 	for _, image := range imageList {
-		fmt.Println(image)
+		repository := strings.Split(image.RepoTags[0], ":")[0]
+		tag := strings.Split(image.RepoTags[0], ":")[1]
+		imageID := strings.Split(image.ID, ":")[1][0:imageIDLength]
+		size := humanize.Bytes(uint64(image.Size))
+		created := time.Unix(image.Created, 0)
+		fmt.Fprintf(writer, imageOutputFormat, repository, tag, imageID, humanize.Time(created), size)
 	}
 
 	return nil
