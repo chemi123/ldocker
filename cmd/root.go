@@ -4,6 +4,10 @@ Copyright © 2024 NAME HERE <EMAIL ADDRESS>
 package cmd
 
 import (
+	"context"
+	"fmt"
+	"os"
+
 	"github.com/chemi123/ldocker/cmd/subcommands"
 	"github.com/chemi123/ldocker/pkg/factory"
 	"github.com/spf13/cobra"
@@ -23,7 +27,17 @@ const (
     Designed with simplicity in mind, ldocker is the perfect tool for those who value efficiency and a clutter-free command-line experience in their Docker management tasks.`
 )
 
-func NewRootCommand() *cobra.Command {
+func Execute() {
+	ctx := context.Background()
+	rootCmd := newRootCommand(ctx)
+	err := rootCmd.Execute()
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "%v\n", err)
+		os.Exit(1)
+	}
+}
+
+func newRootCommand(ctx context.Context) *cobra.Command {
 	rootCmd := &cobra.Command{
 		Use:   "ldocker",
 		Short: shortRootDesc,
@@ -34,7 +48,7 @@ func NewRootCommand() *cobra.Command {
 	clientFactory := factory.NewDockerdClientFactory()
 
 	rootCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
-	rootCmd.AddCommand(subcommands.NewImagesSubCommand(clientFactory))
+	rootCmd.AddCommand(subcommands.NewImagesSubcommand(ctx, clientFactory))
 
 	return rootCmd
 }

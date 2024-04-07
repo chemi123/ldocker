@@ -1,5 +1,11 @@
 package client
 
+import (
+	"context"
+
+	"github.com/docker/docker/api/types/image"
+)
+
 type Client interface {
-	ListContainerImages() error
+	GetImageList(context.Context) ([]image.Summary, error)
 }
