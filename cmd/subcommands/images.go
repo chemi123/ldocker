@@ -72,6 +72,10 @@ func (ish *imagesSubcommandHandler) run(ctx context.Context) error {
 	fmt.Fprintln(writer, imageColumns)
 
 	for _, image := range imageList {
+		/*
+			hardcoding. not sure if a case of image.RepoTags size is 0.
+			for now, just assume that case does not exists.
+		*/
 		repository := strings.Split(image.RepoTags[0], ":")[0]
 		tag := strings.Split(image.RepoTags[0], ":")[1]
 		imageID := strings.Split(image.ID, ":")[1][0:imageIDLength]
