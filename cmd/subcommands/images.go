@@ -29,7 +29,7 @@ func NewImagesSubcommand(ctx context.Context, clientFactory factory.ClientFactor
 		Short: shortImagesDesc,
 		Long:  longImagesDesc,
 		RunE: func(cmd *cobra.Command, args []string) error {
-			if err := isc.completeHandler(ctx, clientFactory); err != nil {
+			if err := isc.completeHandler(clientFactory); err != nil {
 				return err
 			}
 
@@ -42,12 +42,13 @@ func NewImagesSubcommand(ctx context.Context, clientFactory factory.ClientFactor
 	}
 }
 
-func (ish *imagesSubcommandHandler) completeOptions(ctx context.Context) error {
+func (ish *imagesSubcommandHandler) completeOptions() error {
+	ish.options = &ImagesSubcommandOptions{}
 	return nil
 }
 
-func (ish *imagesSubcommandHandler) completeHandler(ctx context.Context, clientFactory factory.ClientFactory) error {
-	err := ish.completeOptions(ctx)
+func (ish *imagesSubcommandHandler) completeHandler(clientFactory factory.ClientFactory) error {
+	err := ish.completeOptions()
 	if err != nil {
 		return err
 	}
